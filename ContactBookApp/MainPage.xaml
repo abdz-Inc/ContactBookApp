@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ContactBookApp.ViewModel"
+             xmlns:model="clr-namespace:ContactBookApp.Model"
+             x:DataType="vm:MainPageViewModel"
+             x:Class="ContactBookApp.MainPage">
+
+    <Grid RowDefinitions="*, 10*"
+          ColumnDefinitions="*"
+          Padding="10">
+
+        <Entry x:Name="searchentry"
+               Completed="search_Completed"
+               Placeholder="Search" />
+
+        <CollectionView Grid.Row="1"
+                        Margin="0,20"
+                        RemainingItemsThreshold="1"
+                        RemainingItemsThresholdReachedCommand="{Binding LoadMoreContactsCommand}"
+                        ItemsSource="{Binding Contacts}">
+
+            <CollectionView.ItemTemplate>
+
+                <DataTemplate x:DataType="model:Contact">
+
+                    <VerticalStackLayout>
+
+                        <Border>
+
+                            <Border.Shadow>
+
+                                <Shadow Radius="10"
+                                        Brush="{AppThemeBinding Light={StaticResource DarkBackgroundColor}, Dark={StaticResource LightBackgroundColor}}" />
+
+                            </Border.Shadow>
+
+                            <Grid ColumnDefinitions="*,5*">
+
+                                <Image Source="{Binding ProfilePic}" />
+
+                                <StackLayout Orientation="Vertical"
+                                             Grid.Column="1">
+
+                                    <Label Text="{Binding Name}"
+                                           FontSize="Large" />
+
+                                    <Label Text="{Binding PhoneNumber}"
+                                           FontSize="Small" />
+
+                                </StackLayout>
+
+                            </Grid>
+
+                        </Border>
+
+                    </VerticalStackLayout>
+
+
+                </DataTemplate>
+
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>
