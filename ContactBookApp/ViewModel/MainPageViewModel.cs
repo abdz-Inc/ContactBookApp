@@ -7,6 +7,7 @@ using MvvmHelpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace ContactBookApp.ViewModel
         {
             Contacts = new ObservableRangeCollection<Model.Contact>();
             this.contactBook = contactBook;
-            RetrievedItemsThreshold = 5;
+            RetrievedItemsThreshold = 10;
             currentPosition = 0;
             LoadMoreContacts();
         }
@@ -52,6 +53,18 @@ namespace ContactBookApp.ViewModel
                 var loadeditems = contactBook.Contacts.Skip(currentPosition).Take(RetrievedItemsThreshold);
                 Contacts.AddRange(loadeditems);
                 currentPosition += loadeditems.Count();
+            }
+        }
+
+        [RelayCommand]
+        public void ToggleFavourite(Model.Contact contact)
+        {
+            /// contact.IsFavourite = !contact.IsFavourite;
+            if (contact != null)
+            {
+                /// OnPropertyChanging(nameof(Contacts));
+                contact.IsFavourite = !contact.IsFavourite;
+                OnPropertyChanged(nameof(Contacts));
             }
         }
 

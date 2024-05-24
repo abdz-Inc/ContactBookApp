@@ -4,7 +4,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!-- Define styles using AppThemeBinding -->
-    
+
+
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color"
                 Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
@@ -191,6 +192,16 @@
                 Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray950}}" />
         <Setter Property="CornerRadius"
                 Value="8" />
+    </Style>
+
+    <Style TargetType="FlyoutItem">
+        <Setter Property="Shell.BackgroundColor"
+                Value="Black" />
+        <Setter Property="Shell.ForegroundColor"
+                Value="White" />
+        <!-- This sets the font color -->
+        <Setter Property="Shell.TitleColor"
+                Value="White" />
     </Style>
 
     <Style TargetType="ImageButton">

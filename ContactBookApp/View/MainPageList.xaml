@@ -4,8 +4,18 @@
              x:Class="ContactBookApp.View.MainPageList"
              xmlns:vm="clr-namespace:ContactBookApp.ViewModel"
              xmlns:model="clr-namespace:ContactBookApp.Model"
+             xmlns:utils="clr-namespace:ContactBookApp.Commons.Utils"
              x:DataType="vm:MainPageViewModel"
              Title="MainPageList">
+
+    <ContentPage.Resources>
+        <x:String x:Key="FavIcon"></x:String>
+        <x:String x:Key="TapFavIcon"></x:String>
+        <x:String x:Key="dplight">profilepicturelight.jpg</x:String>
+        <x:String x:Key="dpdark">profilepicturedark.jpg</x:String>
+        <utils:FavouriteIconConverter x:Key="FavouriteIcon" />
+    </ContentPage.Resources>
+
     <Grid RowDefinitions="*, 10*"
           ColumnDefinitions="*"
           Padding="10">
@@ -14,6 +24,7 @@
                Placeholder="Search" />
 
         <ListView Grid.Row="1"
+                  CachingStrategy="RecycleElementAndDataTemplate"
                   Margin="0,20"
                   HasUnevenRows="True"
                   ItemsSource="{Binding Contacts}">
@@ -35,9 +46,9 @@
 
                                 </Border.Shadow>
 
-                                <Grid ColumnDefinitions="*,5*">
+                                <Grid ColumnDefinitions="*,5*,*">
 
-                                    <Image Source="{Binding ProfilePic}" />
+                                    <Image Source="{AppThemeBinding Dark={StaticResource dpdark}, Light={StaticResource dplight}}" />
 
                                     <StackLayout Orientation="Vertical"
                                                  Grid.Column="1">
@@ -49,6 +60,12 @@
                                                FontSize="Small" />
 
                                     </StackLayout>
+
+                                    <ImageButton Grid.Column="2"
+                                                 HeightRequest="20"
+                                                 Source="{Binding IsFavourite, Converter={StaticResource FavouriteIcon}}"
+                                                 Command="{Binding Path=ToggleFavouriteCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                                 CommandParameter="{Binding .}" />
 
                                 </Grid>
 

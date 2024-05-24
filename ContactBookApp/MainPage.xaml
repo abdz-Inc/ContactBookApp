@@ -3,9 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ContactBookApp.ViewModel"
              xmlns:model="clr-namespace:ContactBookApp.Model"
+             xmlns:utils="clr-namespace:ContactBookApp.Commons.Utils"
              x:DataType="vm:MainPageViewModel"
              x:Class="ContactBookApp.MainPage">
 
+    <ContentPage.Resources>
+        <x:String x:Key="FavIcon"></x:String>
+        <x:String x:Key="TapFavIcon"></x:String>
+        <x:String x:Key="dplight">profilepicturelight.jpg</x:String>
+        <x:String x:Key="dpdark">profilepicturedark.jpg</x:String>
+        <utils:FavouriteIconConverter x:Key="FavouriteIcon" />
+    </ContentPage.Resources>
+    
     <Grid RowDefinitions="*, 10*"
           ColumnDefinitions="*"
           Padding="10">
@@ -15,14 +24,17 @@
                Placeholder="Search" />
 
         <CollectionView Grid.Row="1"
+                        x:Name="contactsCollection"
                         Margin="0,20"
+                        SelectionMode="Single"
                         RemainingItemsThreshold="1"
                         RemainingItemsThresholdReachedCommand="{Binding LoadMoreContactsCommand}"
                         ItemsSource="{Binding Contacts}">
 
             <CollectionView.ItemTemplate>
 
-                <DataTemplate x:DataType="model:Contact">
+                <DataTemplate x:DataType="model:Contact"
+                              x:Name="contactsDataTemplate">
 
                     <VerticalStackLayout>
 
@@ -35,9 +47,9 @@
 
                             </Border.Shadow>
 
-                            <Grid ColumnDefinitions="*,5*">
+                            <Grid ColumnDefinitions="*,5*,100">
 
-                                <Image Source="{Binding ProfilePic}" />
+                                <Image Source="{AppThemeBinding Dark={StaticResource dpdark}, Light={StaticResource dplight}}" />
 
                                 <StackLayout Orientation="Vertical"
                                              Grid.Column="1">
@@ -49,6 +61,15 @@
                                            FontSize="Small" />
 
                                 </StackLayout>
+
+                                <!--Source="{utils:FavouriteIcon IsFavourite={Binding Path=IsFavourite, Source={RelativeSource AncestorType={x:Type model:Contact}}}}"-->
+                                <ImageButton Grid.Column="2"
+                                             HeightRequest="20"
+                                             Source="{Binding IsFavourite, Converter={StaticResource FavouriteIcon}}"
+                                             Command="{Binding Path=ToggleFavouriteCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                             CommandParameter="{Binding .}">
+                                    
+                                </ImageButton>
 
                             </Grid>
 
