@@ -12,13 +12,15 @@
     <Color x:Key="DarkTextColor">#FFFFFF</Color>
     <Color x:Key="LightBorderColor">#D3D3D3</Color>
     <Color x:Key="DarkBorderColor">#666666</Color>
+    <Color x:Key="ModusGray">#6A6E79</Color>
+    <Color x:Key="ModusBlue">#004F83</Color>
 
-    <Color x:Key="Primary">#512BD4</Color>
+    <Color x:Key="Primary">#004F83</Color>
     <Color x:Key="PrimaryDark">#ac99ea</Color>
     <Color x:Key="PrimaryDarkText">#242424</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>
     <Color x:Key="SecondaryDarkText">#9880e5</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    <Color x:Key="Tertiary">#FFFFFF</Color>
 
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>

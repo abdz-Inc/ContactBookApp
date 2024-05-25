@@ -21,25 +21,25 @@ namespace ContactBookApp.Model
         {
             Contacts = new List<Contact>()
             {
-                new Contact(){Name = "abdz", PhoneNumber="2453679872"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"},
-                new Contact(){Name = "abinaya", PhoneNumber="8936740923"}
+                new Contact(){Name = "Abdz", PhoneNumber="2453679872"},
+                new Contact(){Name = "Abinaya", PhoneNumber="8936740923"},
+                new Contact(){Name = "Harish", PhoneNumber="8936740923"},
+                new Contact(){Name = "Jeyaprakash", PhoneNumber="9356740923"},
+                new Contact(){Name = "Avantika", PhoneNumber="8936740923"},
+                new Contact(){Name = "Harsh", PhoneNumber="8036740923"},
+                new Contact(){Name = "Hari", PhoneNumber="8936350923"},
+                new Contact(){Name = "Deva", PhoneNumber="8936740923"},
+                new Contact(){Name = "Abhishek", PhoneNumber="8936740923"},
+                new Contact(){Name = "Abrar", PhoneNumber="9240204031"},
+                new Contact(){Name = "Charan", PhoneNumber="8936740923"},
+                new Contact(){Name = "Christy", PhoneNumber="8936740923"},
+                new Contact(){Name = "Hannah", PhoneNumber="8936740923"},
+                new Contact(){Name = "Srk", PhoneNumber="8936740923"},
+                new Contact(){Name = "Rajini", PhoneNumber="8936740923"},
+                new Contact(){Name = "Vijay", PhoneNumber="8936740923"},
+                new Contact(){Name = "Dhanuush", PhoneNumber="8936740923"},
+                new Contact(){Name = "Goki", PhoneNumber="8936740923"},
+                new Contact(){Name = "Harani", PhoneNumber="9054060302"}
             };
         }
 

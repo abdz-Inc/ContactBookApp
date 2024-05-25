@@ -6,7 +6,7 @@
              xmlns:model="clr-namespace:ContactBookApp.Model"
              xmlns:utils="clr-namespace:ContactBookApp.Commons.Utils"
              x:DataType="vm:MainPageViewModel"
-             Title="MainPageList">
+             Title="ListView">
 
     <ContentPage.Resources>
         <x:String x:Key="FavIcon"></x:String>
@@ -26,53 +26,95 @@
         <ListView Grid.Row="1"
                   CachingStrategy="RecycleElementAndDataTemplate"
                   Margin="0,20"
+                  IsGroupingEnabled="True"
                   HasUnevenRows="True"
+                  SeparatorVisibility="None"
                   ItemsSource="{Binding Contacts}">
+            <ListView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="utils:ContactGroup">
+                    <ViewCell>
+                        <Border BackgroundColor="{StaticResource ModusBlue}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10,10,0,0" />
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,5*,*">
+                                <Label Text="{Binding GroupName}"
+                                       TextColor="White"
+                                       FontSize="Small" />
+                                <Button Text="{Binding IsVisible, Converter={utils:ExpandCollapseConverter}}"
+                                        FontSize="Medium"
+                                        HorizontalOptions="Center"
+                                        VerticalOptions="Center"
+                                        Padding="0,0,0,0"
+                                        TextColor="White"
+                                        BackgroundColor="{StaticResource ModusBlue}"
+                                        HeightRequest="20"
+                                        Grid.Column="2"
+                                        Command="{Binding ToggleGroupCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.GroupHeaderTemplate>
+
 
             <ListView.ItemTemplate>
 
                 <DataTemplate x:DataType="model:Contact">
 
                     <ViewCell>
+                        <SwipeView>
+                            <!-- Define Left Swipe Items -->
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete"
+                                               BackgroundColor="Red"
+                                               Command="{Binding DeleteContactCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
 
-                        <VerticalStackLayout>
+                            <VerticalStackLayout>
 
-                            <Border>
+                                <Border>
 
-                                <Border.Shadow>
+                                    <Border.Shadow>
 
-                                    <Shadow Radius="10"
-                                            Brush="{AppThemeBinding Light={StaticResource DarkBackgroundColor}, Dark={StaticResource LightBackgroundColor}}" />
+                                        <Shadow Radius="10"
+                                                Brush="{AppThemeBinding Light={StaticResource DarkBackgroundColor}, Dark={StaticResource LightBackgroundColor}}" />
 
-                                </Border.Shadow>
+                                    </Border.Shadow>
 
-                                <Grid ColumnDefinitions="*,5*,*">
+                                    <Grid ColumnDefinitions="*,5*,*">
 
-                                    <Image Source="{AppThemeBinding Dark={StaticResource dpdark}, Light={StaticResource dplight}}" />
+                                        <Image Source="{AppThemeBinding Dark={StaticResource dpdark}, Light={StaticResource dplight}}" />
 
-                                    <StackLayout Orientation="Vertical"
-                                                 Grid.Column="1">
+                                        <StackLayout Orientation="Vertical"
+                                                     Grid.Column="1">
 
-                                        <Label Text="{Binding Name}"
-                                               FontSize="Large" />
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="Large" />
 
-                                        <Label Text="{Binding PhoneNumber}"
-                                               FontSize="Small" />
+                                            <Label Text="{Binding PhoneNumber}"
+                                                   FontSize="Small" />
 
-                                    </StackLayout>
+                                        </StackLayout>
 
-                                    <ImageButton Grid.Column="2"
-                                                 HeightRequest="20"
-                                                 Source="{Binding IsFavourite, Converter={StaticResource FavouriteIcon}}"
-                                                 Command="{Binding Path=ToggleFavouriteCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
-                                                 CommandParameter="{Binding .}" />
+                                        <ImageButton Grid.Column="2"
+                                                     HeightRequest="20"
+                                                     Source="{Binding IsFavourite, Converter={StaticResource FavouriteIcon}}"
+                                                     Command="{Binding Path=ToggleFavouriteCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                                     CommandParameter="{Binding .}" />
 
-                                </Grid>
+                                    </Grid>
 
-                            </Border>
+                                </Border>
 
-                        </VerticalStackLayout>
-                        
+                            </VerticalStackLayout>
+
+                        </SwipeView>
+
                     </ViewCell>
 
                 </DataTemplate>

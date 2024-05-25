@@ -4,18 +4,15 @@
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:local="clr-namespace:ContactBookApp"
        xmlns:view="clr-namespace:ContactBookApp.View"
-       ForegroundColor="White"
        FlyoutBackgroundColor="#004F83"
-       FlyoutIcon="vector.png"
        Title="ContactBookApp">
-
-    <ShellContent
-        Title="CollectionView"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-    <ShellContent 
-        Title="ListView"
-        ContentTemplate="{DataTemplate view:MainPageList}"
-        Route="MainPagelist" />
+    <FlyoutItem Title="CollectionView">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}"
+                      Route="MainPage" />
+    </FlyoutItem>
+    <FlyoutItem Title="ListView">
+        <ShellContent ContentTemplate="{DataTemplate view:MainPageList}"
+                      Route="MainPagelist" />
+    </FlyoutItem>
 
 </Shell>

@@ -4,8 +4,15 @@
              xmlns:vm="clr-namespace:ContactBookApp.ViewModel"
              xmlns:model="clr-namespace:ContactBookApp.Model"
              xmlns:utils="clr-namespace:ContactBookApp.Commons.Utils"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="CollectionView"
              x:DataType="vm:MainPageViewModel"
              x:Class="ContactBookApp.MainPage">
+
+    <ContentPage.Behaviors>
+        <toolkit:StatusBarBehavior StatusBarColor="White"
+                                   StatusBarStyle="Default" />
+    </ContentPage.Behaviors>
 
     <ContentPage.Resources>
         <x:String x:Key="FavIcon"></x:String>
@@ -13,70 +20,116 @@
         <x:String x:Key="dplight">profilepicturelight.jpg</x:String>
         <x:String x:Key="dpdark">profilepicturedark.jpg</x:String>
         <utils:FavouriteIconConverter x:Key="FavouriteIcon" />
+        <utils:ExpandCollapseConverter x:Key="ExpandCollapse" />
     </ContentPage.Resources>
-    
+
     <Grid RowDefinitions="*, 10*"
           ColumnDefinitions="*"
           Padding="10">
 
         <Entry x:Name="searchentry"
-               Completed="search_Completed"
                Placeholder="Search" />
 
         <CollectionView Grid.Row="1"
-                        x:Name="contactsCollection"
                         Margin="0,20"
+                        IsGrouped="True"
                         SelectionMode="Single"
-                        RemainingItemsThreshold="1"
+                        RemainingItemsThreshold="20"
                         RemainingItemsThresholdReachedCommand="{Binding LoadMoreContactsCommand}"
                         ItemsSource="{Binding Contacts}">
+
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="utils:ContactGroup">
+                    <Border BackgroundColor="{StaticResource ModusBlue}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="10,10,0,0" />
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,5*,*">
+                            <Label Text="{Binding GroupName}"
+                                   TextColor="White"
+                                   FontSize="Small" />
+                            <Button Text="{Binding IsVisible, Converter={StaticResource ExpandCollapse}}"
+                                    FontSize="Medium"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center"
+                                    Padding="0,0,0,0"
+                                    TextColor="White"
+                                    BackgroundColor="{StaticResource ModusBlue}"
+                                    HeightRequest="20"
+                                    Grid.Column="2"
+                                    Command="{Binding ToggleGroupCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                    CommandParameter="{Binding .}"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
+
+            <CollectionView.GroupFooterTemplate>
+                <DataTemplate>
+                    <Border>
+                        <Label />
+                    </Border>
+                </DataTemplate>
+            </CollectionView.GroupFooterTemplate>
 
             <CollectionView.ItemTemplate>
 
                 <DataTemplate x:DataType="model:Contact"
                               x:Name="contactsDataTemplate">
 
-                    <VerticalStackLayout>
+                    <SwipeView>
 
-                        <Border>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete"
+                                           BackgroundColor="Red"
+                                           Command="{Binding DeleteContactCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                           CommandParameter="{Binding .}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
 
-                            <Border.Shadow>
+                        <VerticalStackLayout>
 
-                                <Shadow Radius="10"
-                                        Brush="{AppThemeBinding Light={StaticResource DarkBackgroundColor}, Dark={StaticResource LightBackgroundColor}}" />
+                            <Border>
 
-                            </Border.Shadow>
+                                <Border.Shadow>
 
-                            <Grid ColumnDefinitions="*,5*,100">
+                                    <Shadow Radius="10"
+                                            Brush="{AppThemeBinding Light={StaticResource DarkBackgroundColor}, Dark={StaticResource LightBackgroundColor}}" />
 
-                                <Image Source="{AppThemeBinding Dark={StaticResource dpdark}, Light={StaticResource dplight}}" />
+                                </Border.Shadow>
 
-                                <StackLayout Orientation="Vertical"
-                                             Grid.Column="1">
+                                <Grid ColumnDefinitions="*,5*,*">
 
-                                    <Label Text="{Binding Name}"
-                                           FontSize="Large" />
+                                    <Image Source="{AppThemeBinding Dark={StaticResource dpdark}, Light={StaticResource dplight}}" />
 
-                                    <Label Text="{Binding PhoneNumber}"
-                                           FontSize="Small" />
+                                    <StackLayout Orientation="Vertical"
+                                                 Grid.Column="1">
 
-                                </StackLayout>
+                                        <Label Text="{Binding Name}"
+                                               FontSize="Title" />
 
-                                <!--Source="{utils:FavouriteIcon IsFavourite={Binding Path=IsFavourite, Source={RelativeSource AncestorType={x:Type model:Contact}}}}"-->
-                                <ImageButton Grid.Column="2"
-                                             HeightRequest="20"
-                                             Source="{Binding IsFavourite, Converter={StaticResource FavouriteIcon}}"
-                                             Command="{Binding Path=ToggleFavouriteCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
-                                             CommandParameter="{Binding .}">
-                                    
-                                </ImageButton>
+                                        <Label Text="{Binding PhoneNumber}"
+                                               FontSize="Small" />
 
-                            </Grid>
+                                    </StackLayout>
 
-                        </Border>
+                                    <!--Source="{utils:FavouriteIcon IsFavourite={Binding Path=IsFavourite, Source={RelativeSource AncestorType={x:Type model:Contact}}}}"-->
+                                    <ImageButton Grid.Column="2"
+                                                 HeightRequest="20"
+                                                 Source="{Binding IsFavourite, Converter={StaticResource FavouriteIcon}}"
+                                                 Command="{Binding Path=ToggleFavouriteCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                                 CommandParameter="{Binding .}">
 
-                    </VerticalStackLayout>
+                                    </ImageButton>
 
+                                </Grid>
+
+                            </Border>
+
+                        </VerticalStackLayout>
+
+                    </SwipeView>
 
                 </DataTemplate>
 

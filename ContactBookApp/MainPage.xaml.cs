@@ -10,12 +10,6 @@ namespace ContactBookApp
             BindingContext = vm;
         }
 
-        private void search_Completed(object sender, EventArgs e)
-        {
-
-        }
-
-        
     }
 
 }

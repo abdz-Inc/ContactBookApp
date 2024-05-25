@@ -194,16 +194,6 @@
                 Value="8" />
     </Style>
 
-    <Style TargetType="FlyoutItem">
-        <Setter Property="Shell.BackgroundColor"
-                Value="Black" />
-        <Setter Property="Shell.ForegroundColor"
-                Value="White" />
-        <!-- This sets the font color -->
-        <Setter Property="Shell.TitleColor"
-                Value="White" />
-    </Style>
-
     <Style TargetType="ImageButton">
         <Setter Property="Opacity"
                 Value="1" />
@@ -565,7 +555,7 @@
         <Setter Property="Shell.BackgroundColor"
                 Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
         <Setter Property="Shell.ForegroundColor"
-                Value="{OnPlatform WinUI={StaticResource Primary}, Default={StaticResource White}}" />
+                Value="{OnPlatform WinUI={StaticResource Primary}, Default={AppThemeBinding Light={StaticResource ModusGray}, Dark={StaticResource White}}}" />
         <Setter Property="Shell.TitleColor"
                 Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource SecondaryDarkText}}" />
         <Setter Property="Shell.DisabledColor"

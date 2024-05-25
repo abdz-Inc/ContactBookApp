@@ -7,22 +7,18 @@ using System.Threading.Tasks;
 
 namespace ContactBookApp.Commons.Utils
 {
-    class FavouriteIconConverter : IValueConverter
+    class ExpandCollapseConverter : IValueConverter
     {
-
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if ((bool)value!) return "favicon.png";
-            else if(Application.Current.RequestedTheme == AppTheme.Light) return "notfavicon.png";
-            else return "notfaviconlight.png";
-
+            if ((bool)value!) return "-";
+            return "+";
         }
 
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if(value!.Equals("favicon.png")) return true;
+            if (value!.Equals("-")) return true;
             return false;
         }
-
     }
 }
