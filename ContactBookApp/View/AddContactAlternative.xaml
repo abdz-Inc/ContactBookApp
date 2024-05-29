@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ContactBookApp.ViewModel.AddContactAlternative"
+             xmlns:vm="clr-namespace:ContactBookApp.ViewModel"
+             xmlns:model="clr-namespace:ContactBookApp.Model"
+             xmlns:utils="clr-namespace:ContactBookApp.Commons.Utils"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Title="AddContactAlternative">
+    <ContentPage.Resources>
+        <x:String x:Key="dplight">profilepicturelight.jpg</x:String>
+        <x:String x:Key="dpdark">profilepicturedark.jpg</x:String>
+        <utils:FavouriteIconConverter x:Key="FavouriteIcon" />
+    </ContentPage.Resources>
+
+    <VerticalStackLayout Padding="20,50,20,20">
+
+        <Border StrokeShape="RoundRectangle 10"
+                HeightRequest="300"
+                BindingContext="{Binding Contact}"
+                Padding="20">
+            <Border.Shadow>
+                <Shadow />
+            </Border.Shadow>
+            <Grid ColumnDefinitions="5*, *"
+                  RowSpacing="20"
+                  x:DataType="model:Contact"
+                  RowDefinitions="*, *, *, *">
+                <ImageButton Grid.Column="0"
+                             HorizontalOptions="Center"
+                             CornerRadius="100"
+                             Source="{AppThemeBinding Dark={StaticResource dpdark}, Light={StaticResource dplight}}" />
+                <ImageButton Grid.Column="1"
+                             Source="{Binding IsFavourite, Converter={StaticResource FavouriteIcon}, Source={RelativeSource AncestorType={x:Type vm:AddContactAlternativeViewModel}}}"
+                             Command="{Binding Path=ToggleFavouriteCommand, Source={RelativeSource AncestorType={x:Type vm:AddContactAlternativeViewModel}}}"
+                             HeightRequest="20"/>
+                <Entry Placeholder="Name"
+                       Text="{Binding Name}"
+                       Grid.Row="1"
+                       Grid.ColumnSpan="2" />
+                <Entry Placeholder="Phone Number"
+                       Grid.Row="2"
+                       Text="{Binding PhoneNumber}"
+                       Grid.ColumnSpan="2"
+                       Keyboard="Telephone">
+                </Entry>
+                <Button Grid.Row="3"
+                        Text="Add Contact"
+                        Command="{Binding Path=AddContactCommand, Source={RelativeSource AncestorType={x:Type vm:AddContactAlternativeViewModel}}}"/>
+            </Grid>
+        </Border>
+    </VerticalStackLayout>
+</ContentPage>

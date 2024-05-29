@@ -14,7 +14,7 @@ namespace ContactBookApp.Commons.Utils
 {
 
 
-    public class ContactGroup : ObservableRangeCollection<Model.Contact>
+    public partial class ContactGroup : ObservableRangeCollection<Model.Contact>
     {
 
         #region Field
@@ -25,8 +25,13 @@ namespace ContactBookApp.Commons.Utils
 
         #region Property
         public string GroupName { get; private set; }
+        public bool IsVisible { get => isVisible; 
+            set
+            {
+                isVisible = value;
+                OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(IsVisible)));
+            } }
         /// public ObservableCollection<Model.Contact> Contacts { get; set; }
-        public bool IsVisible { get; set; }
         #endregion
 
         #region Constructor
@@ -49,7 +54,7 @@ namespace ContactBookApp.Commons.Utils
                 hiddenContacts.Add(contact);
                 return;
             }
-            int index = hiddenContacts.BinarySearch(contact);
+            int index = hiddenContacts.BinarySearch(contact.Name);
             hiddenContacts.Insert(index, contact);
         }
 
@@ -60,7 +65,7 @@ namespace ContactBookApp.Commons.Utils
                 base.Add(contact);
                 return;
             }
-            int index = BinarySearchBase(contact);
+            int index = BinarySearchBase(contact.Name);
             base.Insert(index, contact);
         }
 
@@ -72,37 +77,71 @@ namespace ContactBookApp.Commons.Utils
             else AddToHiddenContacts(contact);
 
         }
-        
+
+        public void RemoveContact(Model.Contact contact) 
+        {
+            if (IsVisible) RemoveFromBase(contact);
+
+            else RemoveFromHiddenContacts(contact);
+        }
+
+        private void RemoveFromHiddenContacts(Model.Contact contact)
+        {
+            if (hiddenContacts.Count == 1)
+            {
+                hiddenContacts.RemoveAt(0);
+                return;
+            }
+            int index = hiddenContacts.BinarySearch(contact.Name);
+            hiddenContacts.RemoveAt(index);
+        }
+
+        private void RemoveFromBase(Model.Contact contact)
+        {
+            if (base.Count == 1)
+            {
+                base.RemoveAt(0);
+                return;
+            }
+            int index = BinarySearchBase(contact.Name);
+            base.RemoveAt(index);
+        }
+
+        public ContactGroup SearchContacts(string contactName)
+        {
+            if (IsVisible) return new ContactGroup(GroupName, base.Items.Where(x => x.Name.Contains(contactName, StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection(), IsVisible);
+            return new ContactGroup(GroupName, hiddenContacts.Where(x => x.Name.Contains(contactName, StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection(), IsVisible);
+        }
         public void ToggleVisibility()
         {
             if (base.Count == 0 && hiddenContacts.Count == 0) return;
             if (IsVisible)
             {
-                for (int i = 0; i < base.Count; i++) hiddenContacts.Add(base.Items[i]);
+                hiddenContacts.AddRange(base.Items);
                 base.RemoveRange(hiddenContacts);
                 IsVisible = false;
             }
             else
             {
                 base.AddRange(hiddenContacts);
-                hiddenContacts.Clear();
+                hiddenContacts.RemoveRange(base.Items);
                 IsVisible = true;
             }
 
         }
 
-        private int BinarySearchBase(Model.Contact key)
+        private int BinarySearchBase(string Name)
         {
             int min = 0;
             int max = base.Count - 1;
             while (min <= max)
             {
                 int mid = (min + max) / 2;
-                if (key.Name.Equals(base[mid].Name))
+                if (Name.Equals(base[mid].Name))
                 {
-                    return ++mid;
+                    return mid;
                 }
-                else if (key.Name.CompareTo(base[mid].Name) < 0)
+                else if (Name.CompareTo(base[mid].Name) < 0)
                 {
                     max = mid - 1;
                 }

@@ -13,7 +13,9 @@
     <Color x:Key="LightBorderColor">#D3D3D3</Color>
     <Color x:Key="DarkBorderColor">#666666</Color>
     <Color x:Key="ModusGray">#6A6E79</Color>
-    <Color x:Key="ModusBlue">#004F83</Color>
+    <Color x:Key="ModusGraySecondry">#353A40</Color>
+    <Color x:Key="ModusBlue">#004F83</Color> 
+    <Color x:Key="ModusBlueSecondry">#0063A3</Color>
 
     <Color x:Key="Primary">#004F83</Color>
     <Color x:Key="PrimaryDark">#ac99ea</Color>

@@ -550,8 +550,17 @@
                 Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
     </Style>
 
+    <Style TargetType="FlyoutPage"
+           ApplyToDerivedTypes="True">
+        <Setter Property="BackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource ModusBlue}, Dark={StaticResource ModusGraySecondry}}" />
+    </Style>
+
+
     <Style TargetType="Shell"
            ApplyToDerivedTypes="True">
+        <Setter Property="FlyoutBackgroundColor"
+                Value="{AppThemeBinding Light={StaticResource ModusBlue}, Dark={StaticResource ModusGraySecondry}}" />
         <Setter Property="Shell.BackgroundColor"
                 Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />
         <Setter Property="Shell.ForegroundColor"
@@ -574,6 +583,13 @@
                 Value="{AppThemeBinding Light={StaticResource Gray900}, Dark={StaticResource Gray200}}" />
     </Style>
 
+    <Style TargetType="Label"
+           Class="FlyoutItemLabelStyle">
+        <Setter Property="TextColor"
+                Value="White" />
+        <Setter Property="HeightRequest"
+                Value="100" />
+    </Style>
     <Style TargetType="NavigationPage">
         <Setter Property="BarBackgroundColor"
                 Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource OffBlack}}" />

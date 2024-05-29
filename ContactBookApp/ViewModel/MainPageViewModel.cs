@@ -2,6 +2,8 @@
 using CommunityToolkit.Mvvm;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using ContactBookApp.Commons.Messenger;
 using ContactBookApp.Commons.Utils;
 using ContactBookApp.Model;
 using Microsoft.Maui.ApplicationModel.Communication;
@@ -16,15 +18,18 @@ using System.Threading.Tasks;
 
 namespace ContactBookApp.ViewModel
 {
-    [ObservableObject]
-    public partial class MainPageViewModel
+  
+    public partial class MainPageViewModel : CommunityToolkit.Mvvm.ComponentModel.ObservableObject, IRecipient<AddContactMessage>
     {
         #region Fields
         [ObservableProperty]
         private ObservableRangeCollection<ContactGroup> contacts;
+
         private List<Model.Contact> sortedContacts;
+        private ContactBook contactBook;
         private int currentPosition;
         private int previousPosition;
+        private ObservableCollection<ContactGroup> temp = new();
         /// private IEnumerable<Model.Contact> loadedItems;
         #endregion
 
@@ -33,9 +38,108 @@ namespace ContactBookApp.ViewModel
         #endregion
 
         #region Constructors
+        /// public MainPageViewModel(ContactBook contactBook, AddContactViewModel addContactViewModel)
         public MainPageViewModel(ContactBook contactBook)
         {
-            Contacts = new ObservableRangeCollection<ContactGroup>()
+            this.contactBook = contactBook;
+            RetrievedItemsThreshold = 30;
+            /// addContactViewModel.ContactAdded += AddContactHandler;
+            WeakReferenceMessenger.Default.Register<AddContactMessage>(this);
+            Application.Current.RequestedThemeChanged += (s, e) => RefreshContacts();
+            ReloadContacts();
+        }
+        #endregion
+
+        [RelayCommand]
+        public void LoadMoreContacts()
+        {
+            if (Contacts != null)
+            {
+                /*loadedItems = sortedContacts
+                    .Skip(currentPosition)
+                    .Take(RetrievedItemsThreshold);*/
+                previousPosition = currentPosition;
+                while (currentPosition < sortedContacts.Count() && currentPosition < previousPosition + RetrievedItemsThreshold)
+                {
+                    Contacts[char.ToLower(sortedContacts[currentPosition].Name[0]) - 'a'].AddContact(sortedContacts[currentPosition]);
+                    currentPosition += 1;
+                }
+
+            }
+        }
+
+        [RelayCommand]
+        public void ToggleFavourite(Model.Contact contact)
+        {
+            /// contact.IsFavourite = !contact.IsFavourite;
+            if (contact != null)
+            {
+                /// OnPropertyChanging(nameof(Contacts));b
+                Contacts[char.ToLower(contact.Name[0]) - 'a'].RemoveContact(contact);
+                contact.IsFavourite = !contact.IsFavourite;
+                Contacts[char.ToLower(contact.Name[0]) - 'a'].AddContact(contact);
+                OnPropertyChanged(nameof(Contacts));
+            }
+        }
+
+        [RelayCommand]
+        public async void DeleteContact(Model.Contact contact)
+        {
+            bool delete = await Application.Current.MainPage.DisplayAlert("Delete", "Do you want to delete this contact?", "Yes", "No");
+            if (delete)
+            {
+                Contacts[char.ToLower(contact.Name[0]) - 'a'].Remove(contact);
+                OnPropertyChanged(nameof(Contacts));
+            }
+        }
+
+        [RelayCommand]
+        public void ToggleGroup(ContactGroup group)
+        {
+            group.ToggleVisibility();
+            OnPropertyChanged(nameof(Contacts));
+        }
+
+        [RelayCommand]
+        public async void GoToAddContactPage()
+        {
+            /// await Shell.Current.GoToAsync("AddContactPage");
+            await Shell.Current.GoToAsync("AddContactAlternative");
+        }
+
+        [RelayCommand]
+        public async void SearchContact(string contactName)
+        {
+            if(temp.Count == 0) temp = Contacts.ToObservableCollection();
+            Contacts.Clear();
+            foreach (var group in temp) Contacts.Add(group.SearchContacts(contactName));
+        }
+
+        public void RefreshContacts()
+        {
+            temp = Contacts.ToObservableCollection();
+            Contacts.Clear();
+            Contacts.AddRange(temp);
+            temp.Clear();
+        }
+
+
+
+        public void ReloadContacts()
+        {
+            Contacts?.Clear();
+            InitializeContacts();
+            sortedContacts = contactBook.Contacts.OrderBy(c => c.Name).ToList();
+            currentPosition = 0;
+            LoadMoreContacts();
+        }
+
+        public void AddContactHandler(Object? sender, AddContactEventArgs args)
+            => Contacts[char.ToLower(args.AddedContact.Name[0]) - 'a'].AddContact(args.AddedContact);
+
+
+        #region Helpers
+        private void InitializeContacts() => Contacts = new ObservableRangeCollection<ContactGroup>()
             {
                 new ContactGroup("A", new List<Model.Contact>()),
                 new ContactGroup("B", new List<Model.Contact>()),
@@ -64,70 +168,13 @@ namespace ContactBookApp.ViewModel
                 new ContactGroup("Y", new List<Model.Contact>()),
                 new ContactGroup("Z", new List<Model.Contact>()),
             };
-            /// loadedItems = new List<Model.Contact>();    
-            sortedContacts = contactBook.Contacts.OrderBy(c => c.Name).ToList();
-            RetrievedItemsThreshold = 30;
-            currentPosition = 0;
-            Application.Current.RequestedThemeChanged += (s, e) => RefreshContacts();
-            LoadMoreContacts();
+
+        public void Receive(AddContactMessage message)
+        {
+            Contacts[char.ToLower(message.Value.Name[0]) - 'a'].AddContact(message.Value);
         }
         #endregion
 
-        [RelayCommand]
-        public void LoadMoreContacts()
-        {
-            if (Contacts != null)
-            {
-                /*loadedItems = sortedContacts
-                    .Skip(currentPosition)
-                    .Take(RetrievedItemsThreshold);*/
-                previousPosition = currentPosition;
-                while (currentPosition < sortedContacts.Count() && currentPosition < previousPosition + RetrievedItemsThreshold)
-                {
-                    Contacts[char.ToLower(sortedContacts[currentPosition].Name[0]) - 'a'].AddContact(sortedContacts[currentPosition]);
-                    currentPosition += 1;
-                }
-
-            }
-        }
-
-        [RelayCommand]
-        public void ToggleFavourite(Model.Contact contact)
-        {
-            /// contact.IsFavourite = !contact.IsFavourite;
-            if (contact != null)
-            {
-                /// OnPropertyChanging(nameof(Contacts));
-                contact.IsFavourite = !contact.IsFavourite;
-                OnPropertyChanged(nameof(Contacts));
-            }
-        }
-
-        [RelayCommand]
-        public async void DeleteContact(Model.Contact contact)
-        {
-            bool delete = await Application.Current.MainPage.DisplayAlert("Delete", "Do you want to delete this contact?", "Yes", "No");
-            if (delete)
-            {
-                Contacts[char.ToLower(contact.Name[0]) - 'a'].Remove(contact);
-                OnPropertyChanged(nameof(Contacts));
-            }
-
-        }
-
-        [RelayCommand]
-        public void ToggleGroup(ContactGroup group)
-        {
-            group.ToggleVisibility();
-            OnPropertyChanged(nameof(Contacts));
-        }
-
-        public void RefreshContacts()
-        {
-            var tempContacts = Contacts.ToObservableCollection();
-            Contacts.Clear();
-            Contacts.AddRange(tempContacts);
-        }
 
     }
 
