@@ -19,8 +19,8 @@ namespace ContactBookApp.Commons.Utils
 
         #region Field
         private string groupName;
-        private bool isVisible;
         private ObservableRangeCollection<Model.Contact> hiddenContacts;
+        private bool isVisible;
         #endregion
 
         #region Property
@@ -30,34 +30,44 @@ namespace ContactBookApp.Commons.Utils
             {
                 isVisible = value;
                 OnPropertyChanged(new System.ComponentModel.PropertyChangedEventArgs(nameof(IsVisible)));
-            } }
-        /// public ObservableCollection<Model.Contact> Contacts { get; set; }
+            } 
+        }
         #endregion
 
         #region Constructor
         public ContactGroup(string groupName, IEnumerable<Model.Contact> contacts, bool isVisible = true) : base(contacts)
         {
+
             GroupName = groupName;
             IsVisible = isVisible;
             hiddenContacts = new();
+
         }
 
         #endregion
 
         #region Methods
-        ///public int Count() => Contacts.Count;
-
-        private void AddToHiddenContacts(Model.Contact contact)
+        /// <summary>
+        /// Add Contact to ContactGroup based on group visibility.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact object to be added.
+        /// </param>
+        public void AddContact(Model.Contact contact)
         {
-            if(hiddenContacts.Count == 0)
-            {
-                hiddenContacts.Add(contact);
-                return;
-            }
-            int index = hiddenContacts.BinarySearch(contact.Name);
-            hiddenContacts.Insert(index, contact);
+
+            if (IsVisible) AddToBase(contact);
+
+            else AddToHiddenContacts(contact);
+
         }
 
+        /// <summary>
+        /// Add contact to base class Collection.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact object to be added.
+        /// </param>
         private void AddToBase(Model.Contact contact)
         {
             if (base.Count == 0)
@@ -69,67 +79,31 @@ namespace ContactBookApp.Commons.Utils
             base.Insert(index, contact);
         }
 
-        public void AddContact(Model.Contact contact)
+
+        /// <summary>
+        /// Add contact to hiddenContacts class Collection.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact object to be added.
+        /// </param>
+        private void AddToHiddenContacts(Model.Contact contact)
         {
-
-            if (IsVisible) AddToBase(contact);
-
-            else AddToHiddenContacts(contact);
-
-        }
-
-        public void RemoveContact(Model.Contact contact) 
-        {
-            if (IsVisible) RemoveFromBase(contact);
-
-            else RemoveFromHiddenContacts(contact);
-        }
-
-        private void RemoveFromHiddenContacts(Model.Contact contact)
-        {
-            if (hiddenContacts.Count == 1)
+            if(hiddenContacts.Count == 0)
             {
-                hiddenContacts.RemoveAt(0);
+                hiddenContacts.Add(contact);
                 return;
             }
             int index = hiddenContacts.BinarySearch(contact.Name);
-            hiddenContacts.RemoveAt(index);
+            hiddenContacts.Insert(index, contact);
         }
 
-        private void RemoveFromBase(Model.Contact contact)
-        {
-            if (base.Count == 1)
-            {
-                base.RemoveAt(0);
-                return;
-            }
-            int index = BinarySearchBase(contact.Name);
-            base.RemoveAt(index);
-        }
 
-        public ContactGroup SearchContacts(string contactName)
-        {
-            if (IsVisible) return new ContactGroup(GroupName, base.Items.Where(x => x.Name.Contains(contactName, StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection(), IsVisible);
-            return new ContactGroup(GroupName, hiddenContacts.Where(x => x.Name.Contains(contactName, StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection(), IsVisible);
-        }
-        public void ToggleVisibility()
-        {
-            if (base.Count == 0 && hiddenContacts.Count == 0) return;
-            if (IsVisible)
-            {
-                hiddenContacts.AddRange(base.Items);
-                base.RemoveRange(hiddenContacts);
-                IsVisible = false;
-            }
-            else
-            {
-                base.AddRange(hiddenContacts);
-                hiddenContacts.RemoveRange(base.Items);
-                IsVisible = true;
-            }
-
-        }
-
+        /// <summary>
+        /// Use binary search to find the index to insert given name in sorted list.
+        /// </summary>
+        /// <param name="Name">
+        /// Name of contact to be added.
+        /// </param>
         private int BinarySearchBase(string Name)
         {
             int min = 0;
@@ -155,6 +129,132 @@ namespace ContactBookApp.Commons.Utils
 
         }
 
+
+        /// <summary>
+        /// Edit Contact to ContactGroup based on group visibility.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact reference to be edited.
+        /// </param>
+        public void EditContact(Model.Contact contact)
+        {
+
+            if (IsVisible) EditInBase(contact);
+
+            else EditInHiddenContacts(contact);
+
+        }
+
+
+        /// <summary>
+        /// Edit contact in base class Collection.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact object to be edited.
+        /// </param>
+        private void EditInBase(Model.Contact contact)
+        {
+            int index = BinarySearchBase(contact.Name);
+            base[index] = contact;
+        }
+
+
+        /// <summary>
+        /// Edit contact in hiddenContacts class Collection.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact object to be edited.
+        /// </param>
+        private void EditInHiddenContacts(Model.Contact contact)
+        {
+            int index = hiddenContacts.BinarySearch(contact.Name);
+            hiddenContacts[index] = contact;
+        }
+
+
+        /// <summary>
+        /// Remove Contact from ContactGroup based on group visibility.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact reference to be removed.
+        /// </param>
+        public void RemoveContact(Model.Contact contact) 
+        {
+            if (IsVisible) RemoveFromBase(contact);
+
+            else RemoveFromHiddenContacts(contact);
+        }
+
+
+        /// <summary>
+        /// Remove contact in base class Collection.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact object to be removed.
+        /// </param>
+        private void RemoveFromBase(Model.Contact contact)
+        {
+            if (base.Count == 1)
+            {
+                base.RemoveAt(0);
+                return;
+            }
+            int index = BinarySearchBase(contact.Name);
+            base.RemoveAt(index);
+        }
+
+
+        /// <summary>
+        /// Remove contact in hiddenContact class Collection.
+        /// </summary>
+        /// <param name="contact">
+        /// Contact object to be removed.
+        /// </param>
+        private void RemoveFromHiddenContacts(Model.Contact contact)
+        {
+            if (hiddenContacts.Count == 1)
+            {
+                hiddenContacts.RemoveAt(0);
+                return;
+            }
+            int index = hiddenContacts.BinarySearch(contact.Name);
+            hiddenContacts.RemoveAt(index);
+        }
+
+
+        /// <summary>
+        /// Search Contact in ContactGroup based on group visibility.
+        /// </summary>
+        /// <param name="contact">
+        /// ContactName to be searched.
+        /// </param>
+        public ContactGroup SearchContacts(string contactName)
+        {
+            if (IsVisible) return new ContactGroup(GroupName, base.Items.Where(x => x.Name.Contains(contactName, StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection(), IsVisible);
+            return new ContactGroup(GroupName, hiddenContacts.Where(x => x.Name.Contains(contactName, StringComparison.CurrentCultureIgnoreCase)).ToObservableCollection(), IsVisible);
+        }
+
+
+        /// <summary>
+        /// Toggle group visibility
+        /// </summary>
+        public void ToggleVisibility()
+        {
+            if (base.Count == 0 && hiddenContacts.Count == 0) return;
+            if (IsVisible)
+            {
+                hiddenContacts.AddRange(base.Items);
+                base.RemoveRange(hiddenContacts);
+                IsVisible = false;
+            }
+            else
+            {
+                base.AddRange(hiddenContacts);
+                hiddenContacts.RemoveRange(base.Items);
+                IsVisible = true;
+            }
+
+        }
         #endregion
 
 

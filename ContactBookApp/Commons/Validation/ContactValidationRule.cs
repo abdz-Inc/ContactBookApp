@@ -12,8 +12,8 @@ namespace ContactBookApp.Commons.Validation
     [ObservableObject]
     public partial class ContactValidationRule
     {
-        private Regex pattern = new Regex("^[0-9]{10}$");
 
+        #region Fields
         private Model.Contact contact;
 
         [ObservableProperty]
@@ -22,25 +22,51 @@ namespace ContactBookApp.Commons.Validation
         [ObservableProperty]
         public bool isPhoneNumberValid;
 
-        public Model.Contact Contact { get; set; }
+        private Regex pattern = new Regex("^[0-9]{10}$");
+        #endregion
 
+        #region Property
+        public Model.Contact Contact 
+        { 
+            get => contact; 
+            set => contact = value; 
+        }
+
+        public bool IsValid
+        {
+            get => IsNameValid && IsPhoneNumberValid;
+        }
+        #endregion
+
+        #region Constructor
         public ContactValidationRule()
         {
             IsNameValid = false;
             IsPhoneNumberValid = false;
         }
+        #endregion
 
-        public bool IsValid { 
-            get =>  IsNameValid && IsPhoneNumberValid;     
-        }
-
+        #region Methods
+        /// <summary>
+        /// validate name of the contact object.
+        /// </summary>
+        /// <returns>
+        /// true if name is valid.
+        /// </returns>
         public bool CheckName()
         {
+
             IsNameValid = !string.IsNullOrEmpty(Contact.Name);
-            /// isValid = IsNameValid && IsPhoneNumberValid;
             return IsNameValid;
+        
         }
 
+        /// <summary>
+        /// validate phonenumber of the contact object.
+        /// </summary>
+        /// <returns>
+        /// true if phonenumber is valid.
+        /// </returns>
         public bool CheckPhoneNumber()
         {
             if (string.IsNullOrEmpty(Contact.PhoneNumber) || Contact.PhoneNumber.Length != 10)
@@ -49,15 +75,22 @@ namespace ContactBookApp.Commons.Validation
                 return false;
             }
             IsPhoneNumberValid = pattern.IsMatch(Contact.PhoneNumber);
-            /// isValid = IsNameValid && IsPhoneNumberValid;
             return IsPhoneNumberValid;
         }
 
+
+        /// <summary>
+        /// validate contact object.
+        /// </summary>
+        /// <returns>
+        /// true if name and phonenumber property are valid.
+        /// </returns>
         public bool Validate()
         {
             CheckName();
             CheckPhoneNumber();
             return IsValid;
         }
+        #endregion
     }
 }

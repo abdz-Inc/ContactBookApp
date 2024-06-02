@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace ContactBookApp.Model
 {
+    [ObservableObject]
     public partial class Contact
     {
 
@@ -15,6 +16,8 @@ namespace ContactBookApp.Model
         private string name;
         private string phoneNumber;
         private string profilePic;
+
+        [ObservableProperty]
         private bool isFavourite;
         #endregion
 
@@ -25,8 +28,6 @@ namespace ContactBookApp.Model
         public string PhoneNumber { get; set; }
 
         public string ProfilePic { get; set; }
-
-        public bool IsFavourite { get; set; }
         #endregion
 
         #region Constructors

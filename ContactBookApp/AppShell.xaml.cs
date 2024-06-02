@@ -10,6 +10,7 @@ namespace ContactBookApp
             InitializeComponent();
             /// Routing.RegisterRoute(nameof(AddContactPage), typeof(AddContactPage));
             Routing.RegisterRoute(nameof(AddContactAlternative), typeof(AddContactAlternative));
+            Routing.RegisterRoute(nameof(EditContactPage), typeof(EditContactPage));
         }
     }
 }

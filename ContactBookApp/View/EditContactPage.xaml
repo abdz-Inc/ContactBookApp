@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ContactBookApp.ViewModel"
+             xmlns:model="clr-namespace:ContactBookApp.Model"
+             xmlns:utils="clr-namespace:ContactBookApp.Commons.Utils"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ContactBookApp.View.EditContactPage"
+             Title="EditContactPage">
+    <ContentPage.Resources>
+        <x:String x:Key="dplight">profilepicturelight.jpg</x:String>
+        <x:String x:Key="dpdark">profilepicturedark.jpg</x:String>
+        <utils:FavouriteIconConverter x:Key="FavouriteIcon" />
+        <utils:EditIconConverter x:Key="EditIcon" />
+        <utils:ValidityConverter x:Key="ValidationColor" />
+    </ContentPage.Resources>
+
+    <VerticalStackLayout Padding="20,50,20,20">
+
+        <Border StrokeShape="RoundRectangle 10"
+                HeightRequest="500"
+                BindingContext="{Binding EditableContact}"
+                Padding="20">
+            <Border.Shadow>
+                <Shadow />
+            </Border.Shadow>
+            <Grid ColumnDefinitions="5*, *"
+                  RowSpacing="20"
+                  x:DataType="model:Contact"
+                  RowDefinitions="1*, 2*, *, *, *">
+                <ImageButton Grid.Column="0"
+                             Grid.RowSpan="2"
+                             HorizontalOptions="Center"
+                             CornerRadius="70"
+                             Aspect="AspectFill"
+                             HeightRequest="150"
+                             WidthRequest="150"
+                             Source="{AppThemeBinding Dark={StaticResource dpdark}, Light={StaticResource dplight}}" />
+                <ImageButton Grid.Column="1"
+                             Source="{Binding IsEditModeOn, Converter={StaticResource EditIcon}, Source={RelativeSource AncestorType={x:Type vm:EditContactViewModel}}}"
+                             Command="{Binding Path=ToggleEditCommand, Source={RelativeSource AncestorType={x:Type vm:EditContactViewModel}}}"
+                             HeightRequest="20"/>
+                <ImageButton Grid.Column="1"
+                             Grid.Row="1"
+                             Source="{Binding IsFavourite, Converter={StaticResource FavouriteIcon}, Source={RelativeSource AncestorType={x:Type vm:EditContactViewModel}}}"
+                             Command="{Binding Path=ToggleFavouriteCommand, Source={RelativeSource AncestorType={x:Type vm:EditContactViewModel}}}"
+                             HeightRequest="20" />
+                <Entry Placeholder="Name"
+                       Text="{Binding Name}"
+                       HorizontalTextAlignment="Center"
+                       IsEnabled="{Binding IsEditModeOn, Source={RelativeSource AncestorType={x:Type vm:EditContactViewModel}}}"
+                       Grid.Row="2"
+                       Grid.ColumnSpan="2">
+                </Entry>
+                <Entry Placeholder="Phone Number"
+                       HorizontalTextAlignment="Center"
+                       IsEnabled="{Binding IsEditModeOn, Source={RelativeSource AncestorType={x:Type vm:EditContactViewModel}}}"
+                       Grid.Row="3"
+                       Text="{Binding PhoneNumber}"
+                       Grid.ColumnSpan="2"
+                       Keyboard="Telephone">
+                </Entry>
+                <Button Text="Edit"
+                        Grid.Row="4"
+                        IsVisible="{Binding IsEditModeOn, Source={RelativeSource AncestorType={x:Type vm:EditContactViewModel}}}"
+                        Command="{Binding Path=EditContactCommand, Source={RelativeSource AncestorType={x:Type vm:EditContactViewModel}}}" />
+            </Grid>
+        </Border>
+    </VerticalStackLayout>
+</ContentPage>

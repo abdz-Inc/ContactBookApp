@@ -11,11 +11,14 @@ namespace ContactBookApp.Commons.Utils
     public static class ObservableCollectionExtension
     {
         /// <summary>
-        /// Search the insertion index for a element in alphabetical order in O(logn) complexity for ObservableRangeCollection
+        /// Search the insertion index for a element in alphabetical order in O(logn) complexity for ObservableCollection.
         /// </summary>
-        /// <param name="contacts"></param>
-        /// <param name="key"></param>
-        /// <returns></returns>
+        /// <param name="contacts">
+        /// ObservableCollection object to search.
+        /// </param>
+        /// <param name="key">
+        /// string to be searched.
+        /// </param>
         public static int BinarySearch(this ObservableCollection<Model.Contact> contacts, string Name)
         {
             int min = 0;
@@ -41,6 +44,15 @@ namespace ContactBookApp.Commons.Utils
 
         }
 
+        /// <summary>
+        /// Search the insertion index for a element in alphabetical order in O(n) complexity for ObservableCollection.
+        /// </summary>
+        /// <param name="contacts">
+        /// ObservableCollection object to search.
+        /// </param>
+        /// <param name="key">
+        /// string to be searched.
+        /// </param>
         public static int SortedListSearch(this ObservableCollection<Model.Contact> contacts, string Name)
         {
             for (int i = 0; i < contacts.Count(); i++)

@@ -30,28 +30,22 @@
 
         <SearchBar x:Name="searchBar"
                    Placeholder="Search">
-            <!--<Shell.SearchHandler>
-                <handlers:MainPageSearchHandler Contacts="{Binding Contacts}"
-                                                Command="SearchContactCommand"
-                                                CommandParameter="{Binding Text, Source={x:Reference searchBar}}"
-                                                ClearPlaceholderCommand="ClearSearchCommand"/>
-            </Shell.SearchHandler>-->
             <SearchBar.Behaviors>
-                <toolkit:EventToCommandBehavior EventName="TextChanged"
-                                                Command="{Binding SearchContactCommand}"
-                                                CommandParameter="{Binding Text, Source={x:Reference searchBar}}" />
+            <toolkit:EventToCommandBehavior EventName="TextChanged"
+                                            Command="{Binding SearchContactCommand}"
+                                            CommandParameter="{Binding Text, Source={x:Reference searchBar}}" />
             </SearchBar.Behaviors>
         </SearchBar>
 
         <CollectionView Grid.Row="1"
+                        x:Name="ContactsCollection"
                         Margin="0,20"
                         IsGrouped="True"
-                        SelectionMode="Single"
                         RemainingItemsThreshold="20"
                         RemainingItemsThresholdReachedCommand="{Binding LoadMoreContactsCommand}"
                         ItemsSource="{Binding Contacts}">
-
             <CollectionView.GroupHeaderTemplate>
+
                 <DataTemplate x:DataType="utils:ContactGroup">
                     <Border BackgroundColor="{StaticResource ModusBlue}">
                         <Border.StrokeShape>
@@ -70,7 +64,7 @@
                                     BackgroundColor="{StaticResource ModusBlue}"
                                     HeightRequest="20"
                                     Grid.Column="2"
-                                    Command="{Binding ToggleGroupCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                    Command="{Binding ToggleGroupVisibilityCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
                                     CommandParameter="{Binding .}" />
                         </Grid>
                     </Border>
@@ -89,7 +83,6 @@
 
                 <DataTemplate x:DataType="model:Contact"
                               x:Name="contactsDataTemplate">
-
                     <SwipeView>
 
                         <SwipeView.RightItems>
@@ -100,35 +93,34 @@
                                            CommandParameter="{Binding .}" />
                             </SwipeItems>
                         </SwipeView.RightItems>
-
                         <VerticalStackLayout>
-
+                            
                             <Border>
-
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Path=GoToEditContactPageCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
                                 <Border.Shadow>
-
                                     <Shadow Radius="10"
                                             Brush="{AppThemeBinding Light={StaticResource DarkBackgroundColor}, Dark={StaticResource LightBackgroundColor}}" />
-
                                 </Border.Shadow>
 
                                 <Grid ColumnDefinitions="*,5*,*">
 
-                                    <Image Source="{AppThemeBinding Dark={StaticResource dpdark}, Light={StaticResource dplight}}" />
+                                    <Image Source="{AppThemeBinding Light={StaticResource dpdark}, Dark={StaticResource dplight}}" />
 
-                                    <StackLayout Orientation="Vertical"
-                                                 Grid.Column="1">
+                                    <VerticalStackLayout Grid.Column="1">
 
-                                        <Label Text="{Binding Name}"
-                                               FontSize="Title" />
+                                    <Label Text="{Binding Name}"
+                                           FontSize="Title" />
 
-                                        <Label Text="{Binding PhoneNumber}"
-                                               FontSize="Small" />
+                                    <Label Text="{Binding PhoneNumber}"
+                                           FontSize="Small" />
+                                    </VerticalStackLayout>
 
-                                    </StackLayout>
-                                    
                                     <ImageButton Grid.Column="2"
                                                  HeightRequest="20"
+                                                 WidthRequest="30"
                                                  Source="{Binding IsFavourite, Converter={StaticResource FavouriteIcon}}"
                                                  Command="{Binding Path=ToggleFavouriteCommand, Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}}"
                                                  CommandParameter="{Binding .}" />
@@ -146,7 +138,7 @@
             </CollectionView.ItemTemplate>
 
         </CollectionView>
-        
+
         <Button Text="+"
                 Grid.Row="1"
                 BackgroundColor="{StaticResource ModusBlueSecondry}"

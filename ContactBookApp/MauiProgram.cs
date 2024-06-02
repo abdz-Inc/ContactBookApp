@@ -17,6 +17,8 @@ namespace ContactBookApp
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             }).UseMauiCommunityToolkit();
+            builder.Services.AddTransient<EditContactPage>();
+            builder.Services.AddTransient<EditContactViewModel>();
             builder.Services.AddTransient<Model.Contact>();
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainPageList>();

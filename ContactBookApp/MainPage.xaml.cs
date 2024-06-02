@@ -11,7 +11,6 @@ namespace ContactBookApp
             BindingContext = vm;
             viewModel = vm;
         }
-
     }
 
 }

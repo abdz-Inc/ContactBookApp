@@ -11,6 +11,7 @@
         <x:String x:Key="dplight">profilepicturelight.jpg</x:String>
         <x:String x:Key="dpdark">profilepicturedark.jpg</x:String>
         <utils:FavouriteIconConverter x:Key="FavouriteIcon" />
+        <utils:ValidityConverter x:Key="ValidationColor" />
     </ContentPage.Resources>
 
     <VerticalStackLayout Padding="20,50,20,20">
@@ -37,7 +38,8 @@
                 <Entry Placeholder="Name"
                        Text="{Binding Name}"
                        Grid.Row="1"
-                       Grid.ColumnSpan="2" />
+                       Grid.ColumnSpan="2">
+                </Entry>
                 <Entry Placeholder="Phone Number"
                        Grid.Row="2"
                        Text="{Binding PhoneNumber}"
